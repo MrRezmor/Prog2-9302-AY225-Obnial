@@ -1,105 +1,89 @@
+const TOTAL_CLASSES = 5;
+const MAX_ABSENCES = 3;
 const ATTENDANCE_WEIGHT = 0.40;
-const LAB_WORK_WEIGHT = 0.60;
+const LAB_WEIGHT = 0.60;
 const CLASS_STANDING_WEIGHT = 0.70;
-const PRELIM_EXAM_WEIGHT = 0.30;
-const PASSING_GRADE = 75.0;
-const EXCELLENT_GRADE = 100.0;
-const MAX_ATTENDANCE = 20;
+const PRELIM_WEIGHT = 0.30;
 
-document.getElementById('gradeForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    document.getElementById('error').classList.remove('show');
+const form = document.getElementById('gradeForm');
+const inputs = document.querySelectorAll('input[type="number"]');
+const statusRemark = document.getElementById('statusRemark');
 
-    let attendances = parseInt(document.getElementById('attendances').value);
-    const labWork1 = parseFloat(document.getElementById('labWork1').value);
-    const labWork2 = parseFloat(document.getElementById('labWork2').value);
-    const labWork3 = parseFloat(document.getElementById('labWork3').value);
+// 1. Strict input control: No decimals & Auto-trimming
+inputs.forEach(input => {
+    input.addEventListener('keypress', (e) => {
+        if (e.which < 48 || e.which > 57) e.preventDefault();
+    });
 
-    if (labWork1 < 0 || labWork1 > 100 || labWork2 < 0 || labWork2 > 100 || labWork3 < 0 || labWork3 > 100) {
-        showError("Lab work grades must be between 0 and 100.");
-        return;
-    }
-
-    if (attendances < 0 || attendances > MAX_ATTENDANCE) {
-        showError("Number of attendances must be between 0 and " + MAX_ATTENDANCE + ".");
-        return;
-    }
-
-    // 1️⃣ Lab Work Average
-    const labWorkAverage = (labWork1 + labWork2 + labWork3) / 3.0;
-
-    // 2️⃣ Attendance Score
-    const attendanceScore = (attendances / MAX_ATTENDANCE) * 100;
-
-    // 3️⃣ Class Standing
-    const classStanding = (attendanceScore * ATTENDANCE_WEIGHT) + (labWorkAverage * LAB_WORK_WEIGHT);
-
-    // 4️⃣ Required Prelim Exam
-    const requiredExamForPassing = (PASSING_GRADE - (classStanding * CLASS_STANDING_WEIGHT)) / PRELIM_EXAM_WEIGHT;
-    const requiredExamForExcellent = (EXCELLENT_GRADE - (classStanding * CLASS_STANDING_WEIGHT)) / PRELIM_EXAM_WEIGHT;
-
-    displayResultsAnimated(attendanceScore, attendances, labWork1, labWork2, labWork3,
-                           labWorkAverage, classStanding, requiredExamForPassing, requiredExamForExcellent);
+    input.addEventListener('input', () => {
+        let val = parseInt(input.value);
+        if (input.id === 'attended' || input.id === 'excused' || input.id === 'unexcused') {
+            if (val > 5) input.value = 5;
+        } else if (val > 100) {
+            input.value = 100;
+        }
+    });
 });
 
-function displayResultsAnimated(attendanceScore, attendances, lab1, lab2, lab3, labAverage, classStanding, passingScore, excellentScore) {
-    animateNumber('attendanceScore', attendanceScore.toFixed(2) + `% (${attendances}/20 classes)`);
-    animateNumber('displayLab1', lab1.toFixed(2));
-    animateNumber('displayLab2', lab2.toFixed(2));
-    animateNumber('displayLab3', lab3.toFixed(2));
-    animateNumber('labAverage', labAverage.toFixed(2));
-    animateNumber('classStanding', classStanding.toFixed(2));
-    animateNumber('passingScore', passingScore.toFixed(2));
-    animateNumber('excellentScore', excellentScore.toFixed(2));
+// 2. Clear Button Logic
+document.getElementById('btnClear').addEventListener('click', () => {
+    form.reset();
+    updateStats(0, 0, 0, 0);
+    statusRemark.className = "remark normal";
+    statusRemark.textContent = "Ready to calculate...";
+});
 
-    const passingRemark = document.getElementById('passingRemark');
-    if (passingScore < 0) {
-        passingRemark.textContent = "Congratulations! Already passing!";
-        passingRemark.className = "remark success";
-    } else if (passingScore <= 100.0) {
-        passingRemark.textContent = `Score at least ${passingScore.toFixed(2)} on the Prelim Exam to pass.`;
-        passingRemark.className = "remark";
-    } else {
-        passingRemark.textContent = "Difficult to pass. Required score > 100%.";
-        passingRemark.className = "remark danger";
-    }
+// 3. Calculation Logic
+form.addEventListener('submit', function(e) {
+    e.preventDefault();
 
-    const excellentRemark = document.getElementById('excellentRemark');
-    if (excellentScore < 0) {
-        excellentRemark.textContent = "Outstanding! Already excellent!";
-        excellentRemark.className = "remark success";
-    } else if (excellentScore <= 100.0) {
-        excellentRemark.textContent = `Score at least ${excellentScore.toFixed(2)} for excellent grade.`;
-        excellentRemark.className = "remark";
-    } else {
-        excellentRemark.textContent = "Impossible to achieve excellent. Required score > 100%.";
-        excellentRemark.className = "remark warning";
-    }
-}
+    const att = parseInt(document.getElementById('attended').value || 0);
+    const exc = parseInt(document.getElementById('excused').value || 0);
+    const unx = parseInt(document.getElementById('unexcused').value || 0);
+    const l1 = parseInt(document.getElementById('lab1').value || 0);
+    const l2 = parseInt(document.getElementById('lab2').value || 0);
+    const l3 = parseInt(document.getElementById('lab3').value || 0);
 
-// Count-up animation for numeric results
-function animateNumber(id, target) {
-    const element = document.getElementById(id);
-    if (target.includes('%') || target.includes('(')) {
-        element.textContent = target;
+    // Meeting validation
+    if (att + exc + unx !== TOTAL_CLASSES) {
+        alert("Total meetings must equal 5");
         return;
     }
 
-    const numericValue = parseFloat(target) || 0;
-    let current = 0;
-    const increment = numericValue / 50;
-    const interval = setInterval(() => {
-        current += increment;
-        if (current >= numericValue) {
-            current = numericValue;
-            clearInterval(interval);
-        }
-        element.textContent = current.toFixed(2);
-    }, 10);
-}
+    // Automatic Fail Check
+    if (unx > MAX_ABSENCES) {
+        statusRemark.className = "remark danger";
+        statusRemark.textContent = `AUTOMATIC FAIL\nUnexcused Absences: ${unx}\nLimit: 3`;
+        updateStats(0, 0, 0, 0);
+        return;
+    }
 
-function showError(message) {
-    const errorDiv = document.getElementById('error');
-    errorDiv.textContent = "Error: " + message;
-    errorDiv.classList.add('show');
+    const attScore = att * 20;
+    const labAvg = Math.floor((l1 + l2 + l3) / 3);
+    const classStanding = Math.round((attScore * ATTENDANCE_WEIGHT) + (labAvg * LAB_WEIGHT));
+    const currentGrade = classStanding * CLASS_STANDING_WEIGHT;
+    const needed = Math.ceil((75 - currentGrade) / PRELIM_WEIGHT);
+
+    updateStats(attScore, labAvg, classStanding, currentGrade);
+
+    if (currentGrade >= 75) {
+        statusRemark.className = "remark success";
+        statusRemark.textContent = "STATUS: ALREADY PASSED 🎉\nYou already met the passing grade even before the prelim exam.";
+    } else {
+        let msg = `PRELIM EXAM REQUIRED\n--------------------\n`;
+        if (needed <= 100) {
+            statusRemark.className = "remark normal";
+            statusRemark.textContent = msg + `Grade needed to PASS: ${needed}\n\nSTATUS: CAN STILL PASS`;
+        } else {
+            statusRemark.className = "remark danger";
+            statusRemark.textContent = msg + `Grade needed to PASS: MORE THAN 100\n\nSTATUS: IMPOSSIBLE TO PASS`;
+        }
+    }
+});
+
+function updateStats(attS, labA, stand, grad) {
+    document.getElementById('resAtt').textContent = attS;
+    document.getElementById('resLab').textContent = labA;
+    document.getElementById('resStand').textContent = stand;
+    document.getElementById('resGrade').textContent = grad === 0 ? "0.00" : grad.toFixed(2);
 }

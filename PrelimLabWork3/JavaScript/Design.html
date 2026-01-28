@@ -8,8 +8,9 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f4f6f8;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: #121212; /* Java BG Color */
+            color: #dcdfe6; /* Java Text Color */
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -18,202 +19,154 @@
         }
 
         .container {
-            background: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-            padding: 50px;
-            max-width: 600px;
+            background: #1e1e1e; /* Java Card Color */
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            padding: 35px;
+            max-width: 500px;
             width: 100%;
+            border: 1px solid #3c3c3c;
         }
 
         h1 {
-            color: #2c3e50;
+            color: #4f86f7; /* Java Primary Color */
             text-align: center;
-            margin-bottom: 35px;
-            font-size: 32px;
-            letter-spacing: 1px;
+            margin-bottom: 25px;
+            font-size: 22px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
         }
 
-        .input-group {
-            margin-bottom: 20px;
-        }
+        .input-group { margin-bottom: 18px; }
+
+        .attendance-row { display: flex; gap: 10px; }
+        .attendance-row div { flex: 1; }
 
         label {
             display: block;
-            margin-bottom: 6px;
-            color: #34495e;
-            font-weight: 600;
-            font-size: 14px;
+            margin-bottom: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #dcdfe6;
         }
 
         input {
             width: 100%;
-            padding: 14px;
-            border: 1.5px solid #dcdfe6;
-            border-radius: 10px;
+            padding: 12px;
+            background: #191919;
+            border: 1px solid #3c3c3c;
+            border-radius: 6px;
             font-size: 16px;
-            transition: border-color 0.3s, box-shadow 0.3s;
+            color: #dcdfe6;
+            outline: none;
+            transition: border-color 0.2s;
         }
 
-        input:focus {
-            outline: none;
-            border-color: #1abc9c;
-            box-shadow: 0 0 6px rgba(26, 188, 156, 0.3);
+        input:focus { border-color: #4f86f7; }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+        /* Button Layout */
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
         }
 
         button {
-            width: 100%;
-            padding: 16px;
-            background: #1abc9c;
-            color: #fff;
+            flex: 1;
+            padding: 15px;
+            color: white;
             border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: 600;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 700;
             cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
-            margin-top: 25px;
+            text-transform: uppercase;
+            transition: opacity 0.2s;
         }
 
-        button:hover {
-            background: #16a085;
-            transform: translateY(-2px);
-        }
+        .btn-compute { background: #4f86f7; }
+        .btn-clear { background: #3c3c3c; } /* Matches Java "Clear" button feel */
 
-        button:active { transform: translateY(0); }
+        button:hover { opacity: 0.8; }
 
         #results {
-            margin-top: 35px;
-            padding: 30px;
-            background: #ecf0f1;
-            border-radius: 12px;
-            display: block;
-        }
-
-        .result-section { margin-bottom: 25px; }
-
-        .result-section h2 {
-            color: #34495e;
-            font-size: 20px;
-            margin-bottom: 18px;
-            border-bottom: 2px solid #1abc9c;
-            padding-bottom: 8px;
+            margin-top: 25px;
+            padding: 20px;
+            background: #191919;
+            border-radius: 8px;
+            border: 1px solid #3c3c3c;
+            font-family: 'Consolas', 'Courier New', monospace;
         }
 
         .result-item {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
-            font-size: 16px;
+            padding: 8px 0;
+            border-bottom: 1px solid #2a2a2a;
+            font-size: 14px;
         }
 
-        .result-item span { font-weight: 600; }
-
-        .result-value {
-            font-size: 18px;
-            font-weight: 700;
-            color: #2c3e50;
-        }
+        .result-label { color: #dcdfe6; }
+        .result-value { color: #4f86f7; font-weight: bold; }
 
         .remark {
-            background: #dfe6e9;
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 10px;
-            font-weight: 600;
-            border-left: 5px solid #1abc9c;
-        }
-
-        .remark.success { background: #e0f7fa; border-left-color: #009688; }
-        .remark.warning { background: #fff3e0; border-left-color: #ff9800; }
-        .remark.danger { background: #ffebee; border-left-color: #e74c3c; }
-
-        .error {
-            background: #fdecea;
-            color: #c0392b;
             padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-            display: none;
+            border-radius: 6px;
+            margin-top: 15px;
             font-weight: 600;
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: pre-wrap;
         }
 
-        .error.show { display: block; }
+        .remark.normal { background: #252525; border-left: 5px solid #4f86f7; }
+        .remark.success { background: #1b2e1b; border-left: 5px solid #4caf50; color: #81c784; }
+        .remark.danger { background: #2e1b1b; border-left: 5px solid #f44336; color: #e57373; }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <h1>Prelim Grade Calculator</h1>
+        <h1>Prelim Calculator</h1>
         
         <form id="gradeForm">
             <div class="input-group">
-                <label for="attendances">Number of Attendances (max 20):</label>
-                <input type="number" id="attendances" min="0" max="20" required>
+                <label>Attendance (Max 5 Total)</label>
+                <div class="attendance-row">
+                    <div><input type="number" id="attended" placeholder="Att" required></div>
+                    <div><input type="number" id="excused" placeholder="Exc" required></div>
+                    <div><input type="number" id="unexcused" placeholder="Unx" required></div>
+                </div>
             </div>
             
             <div class="input-group">
-                <label for="labWork1">Lab Work 1 Grade:</label>
-                <input type="number" id="labWork1" min="0" max="100" step="0.01" required>
+                <label>Lab Work 1 (0-100)</label>
+                <input type="number" id="lab1" required>
             </div>
-            
             <div class="input-group">
-                <label for="labWork2">Lab Work 2 Grade:</label>
-                <input type="number" id="labWork2" min="0" max="100" step="0.01" required>
+                <label>Lab Work 2 (0-100)</label>
+                <input type="number" id="lab2" required>
             </div>
-            
             <div class="input-group">
-                <label for="labWork3">Lab Work 3 Grade:</label>
-                <input type="number" id="labWork3" min="0" max="100" step="0.01" required>
+                <label>Lab Work 3 (0-100)</label>
+                <input type="number" id="lab3" required>
             </div>
             
-            <button type="submit">Calculate Required Exam Score</button>
+            <div class="button-group">
+                <button type="submit" class="btn-compute">Compute</button>
+                <button type="button" class="btn-clear" id="btnClear">Clear</button>
+            </div>
         </form>
         
-        <div id="error" class="error"></div>
-        
         <div id="results">
-            <div class="result-section">
-                <h2>Current Standings</h2>
-                <div class="result-item">
-                    <span class="result-label">Attendance Score:</span>
-                    <span class="result-value" id="attendanceScore">—</span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">Lab Work 1:</span>
-                    <span class="result-value" id="displayLab1">—</span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">Lab Work 2:</span>
-                    <span class="result-value" id="displayLab2">—</span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">Lab Work 3:</span>
-                    <span class="result-value" id="displayLab3">—</span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">Lab Work Average:</span>
-                    <span class="result-value" id="labAverage">—</span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">Class Standing:</span>
-                    <span class="result-value" id="classStanding">—</span>
-                </div>
-            </div>
-            
-            <div class="result-section">
-                <h2>Required Prelim Exam Scores</h2>
-                <div class="result-item">
-                    <span class="result-label">To PASS (75%):</span>
-                    <span class="result-value" id="passingScore">—</span>
-                </div>
-                <div id="passingRemark" class="remark"></div>
-                
-                <div class="result-item" style="margin-top: 15px;">
-                    <span class="result-label">To achieve EXCELLENT (100%):</span>
-                    <span class="result-value" id="excellentScore">—</span>
-                </div>
-                <div id="excellentRemark" class="remark"></div>
-            </div>
+            <div class="result-item"><span>ATTENDANCE SCORE:</span><span id="resAtt" class="result-value">0</span></div>
+            <div class="result-item"><span>LAB WORK AVG:</span><span id="resLab" class="result-value">0</span></div>
+            <div class="result-item"><span>CLASS STANDING:</span><span id="resStand" class="result-value">0</span></div>
+            <div class="result-item"><span>CURRENT GRADE:</span><span id="resGrade" class="result-value">0.00</span></div>
+            <div id="statusRemark" class="remark normal">Ready to calculate...</div>
         </div>
     </div>
 
