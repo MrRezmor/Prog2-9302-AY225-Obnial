@@ -1,0 +1,5 @@
+This program reads a CSV file line by line using BufferedReader (Java) or fs.readFileSync (JavaScript) and skips any metadata at the top of the file. 
+It identifies the real column header row by looking for a row where the first field is "Candidate", then stores those column names for reference. 
+For every data row that follows, it checks each column position — if a column has a defined header name but the corresponding cell in that row is empty or blank, the field is marked as missing.
+Any row with at least one missing field is recorded with its line number, the candidate's name, and a list of which fields were missing. 
+The program finishes by printing a formatted summary showing the total rows checked and every row with incomplete data.

@@ -1,0 +1,5 @@
+This program first asks the user for a CSV file path and a keyword to search for, then reads and parses the dataset to locate the real data rows. 
+Both the keyword and each cell value are converted to lowercase before comparison, making the search case-insensitive so that "PASS", "Pass", and "pass" all count as a match. 
+A custom countOccurrences function uses a sliding indexOf() loop to count every occurrence of the keyword within a cell, even if it appears multiple times. 
+The program accumulates a per-row count and a grand total, and records which rows contained a match. 
+Finally, it displays the total number of occurrences, how many rows contained the keyword, and the details of each matching row.

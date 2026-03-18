@@ -1,0 +1,5 @@
+This program reads the CSV dataset and skips all metadata lines at the top, saving the column header row and then collecting the first 50 data rows into a list. 
+A MAX_ROWS constant set to 50 controls the collection limit, and the program stops reading as soon as 50 rows have been gathered. 
+The header line is written first to the output file so the exported CSV retains its column structure, followed by the 50 data rows written line by line. 
+Java uses PrintWriter with FileWriter to create the output file, while JavaScript uses fs.writeFileSync after joining all lines with newline characters. 
+The program ends by printing a confirmation message and a preview of the first 5 exported rows.
